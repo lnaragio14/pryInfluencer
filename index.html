@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sponcer · Compara perfiles de Instagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F4FB; --surface:#FFFFFF; --surface-2:#EFEBF8; --ink:#1B1633; --muted:#625C80; --line:#E2DCF0;
+  --pink:#D62976; --violet:#962FBF; --blue:#4F5BD5; --orange:#FA7E1E; --yellow:#FEDA75;
+  --a:#D62976; --b:#4F5BD5;
+  --good:#0E8F63; --warn:#B86A00; --bad:#C62828;
+  --grad:linear-gradient(120deg,#FEDA75 0%,#FA7E1E 22%,#D62976 50%,#962FBF 76%,#4F5BD5 100%);
+  --shadow:0 1px 0 rgba(27,22,51,.04),0 8px 24px -12px rgba(80,40,140,.18);
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Figtree",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F0B1C; --surface:#18132B; --surface-2:#221C3A; --ink:#F2EEFF; --muted:#A9A2C8; --line:#2F2850;
+    --a:#FF4FA0; --b:#7C88FF; --good:#3DD69C; --warn:#FFB547; --bad:#FF6B6B;
+    --shadow:0 1px 0 rgba(255,255,255,.03),0 10px 30px -14px rgba(0,0,0,.6);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F0B1C; --surface:#18132B; --surface-2:#221C3A; --ink:#F2EEFF; --muted:#A9A2C8; --line:#2F2850;
+  --a:#FF4FA0; --b:#7C88FF; --good:#3DD69C; --warn:#FFB547; --bad:#FF6B6B;
+  --shadow:0 1px 0 rgba(255,255,255,.03),0 10px 30px -14px rgba(0,0,0,.6);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+img{max-width:100%}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px;border-radius:8px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.02em}
+.brand-mark{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center}
+.brand-mark span{width:13px;height:13px;border:2.5px solid #fff;border-radius:50%}
+.nav{display:flex;gap:2px;margin-left:8px;overflow-x:auto;scrollbar-width:none}
+.nav a{padding:8px 12px;border-radius:999px;text-decoration:none;color:var(--muted);font-weight:600;font-size:15px;white-space:nowrap}
+.nav a:hover{color:var(--ink);background:var(--surface-2)}
+.nav a[aria-current="page"]{color:var(--ink);background:var(--surface-2)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center}
+.user-chip{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:14px}
+@media (max-width:760px){
+  .top-in{flex-wrap:wrap;gap:8px;padding:10px 14px}
+  .nav{order:3;width:100%;margin-left:0}
+  .user-chip .uname{display:none}
+}
+
+/* ---------- Layout ---------- */
+main{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.025em;line-height:1.08;margin:0}
+h2{font-size:clamp(26px,3.6vw,36px);font-weight:800}
+h3{font-size:19px;font-weight:700;letter-spacing:-.01em}
+.lead{color:var(--muted);font-size:18px;max-width:60ch;margin:10px 0 0}
+.muted{color:var(--muted)}
+.page-head{margin-bottom:24px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;color:var(--ink);transition:transform .12s ease,background .15s}
+.btn:hover{background:var(--surface-2)}
+.btn:active{transform:scale(.98)}
+.btn-grad{border:0;color:#fff;background:var(--grad);background-size:140% 100%}
+.btn-grad:hover{background:var(--grad);filter:brightness(1.06)}
+.btn-sm{height:36px;padding:0 12px;font-size:14px;border-radius:10px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--muted)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.field{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+.input,.select{height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:0 14px;font-weight:500;font-size:15px;min-width:0}
+.input:focus,.select:focus{outline:2px solid var(--a);outline-offset:0;border-color:transparent}
+.err{color:var(--bad);font-size:14px;font-weight:600;margin:6px 0 0}
+
+/* ---------- Avatar ---------- */
+.av{--s:48px;width:var(--s);height:var(--s);border-radius:50%;padding:2.5px;background:var(--grad);flex:none}
+.av span{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;border:2.5px solid var(--surface);font-family:var(--display);font-weight:800;color:#fff;font-size:calc(var(--s)*.34)}
+
+/* ---------- Home ---------- */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:18px 0 36px}
+.hero h1{font-size:clamp(40px,6.4vw,76px);font-weight:800;letter-spacing:-.045em;line-height:.98}
+.hero h1 .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lead{font-size:19px;margin-top:20px}
+.hero .row{margin-top:28px}
+.demo{padding:22px;position:relative;overflow:hidden}
+.demo-vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;text-align:center}
+.demo-vs .who{display:flex;flex-direction:column;align-items:center;gap:6px}
+.demo-vs .who b{font-family:var(--display);font-size:17px}
+.vs-dot{width:44px;height:44px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:15px}
+.demo-bars{margin-top:20px;display:grid;gap:14px}
+.dbar-label{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:6px}
+.dbar{display:grid;grid-template-columns:1fr 1fr;gap:4px;height:10px}
+.dbar i{display:block;border-radius:6px;background:var(--surface-2);position:relative;overflow:hidden}
+.dbar i b{position:absolute;inset:0 auto 0 auto;border-radius:6px}
+.dbar i:first-child b{right:0;background:var(--a)}
+.dbar i:last-child b{left:0;background:var(--b)}
+.loop{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;border-top:1px solid var(--line);padding-top:32px}
+.loop .n{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;font-family:var(--display);margin-bottom:12px}
+.loop p{margin:6px 0 0;color:var(--muted)}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.loop{grid-template-columns:1fr}}
+
+/* ---------- Discover ---------- */
+.filters{padding:16px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+@media (max-width:860px){.filters{grid-template-columns:1fr 1fr}.filters .f-search{grid-column:1/-1}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.chip{height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;font-size:14px;cursor:pointer;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.pcard{padding:18px;display:flex;flex-direction:column;gap:14px}
+.pcard-h{display:flex;gap:12px;align-items:center;min-width:0}
+.pcard-h div{min-width:0}
+.pcard-h b{display:block;font-family:var(--display);font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard-h small{color:var(--muted);font-size:14px}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats3 div{text-align:center}
+.stats3 strong{display:block;font-family:var(--display);font-size:19px}
+.stats3 span{font-size:12px;color:var(--muted);font-weight:600}
+.pcard .row{margin-top:auto}
+.pcard .row .btn{flex:1}
+.er-pill{font-weight:700;font-size:13px;padding:3px 9px;border-radius:999px}
+.lvl-bajo{color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.lvl-promedio{color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent)}
+.lvl-bueno{color:var(--good);background:color-mix(in srgb,var(--good) 13%,transparent)}
+.lvl-excelente{color:var(--violet);background:color-mix(in srgb,var(--violet) 14%,transparent)}
+:root[data-theme="dark"] .lvl-excelente{color:#D58BFF}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .lvl-excelente{color:#D58BFF}}
+
+.skel{background:linear-gradient(90deg,var(--surface-2),color-mix(in srgb,var(--surface-2) 50%,var(--surface)),var(--surface-2));background-size:200% 100%;animation:sh 1.2s infinite linear;border-radius:20px;height:230px}
+@keyframes sh{to{background-position:-200% 0}}
+.empty{padding:40px 24px;text-align:center}
+.empty h3{margin-bottom:6px}
+.empty p{margin:0 auto 18px;max-width:46ch;color:var(--muted)}
+
+/* ---------- Profiles ---------- */
+.add-form{padding:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:22px}
+.add-form .field{flex:1;min-width:220px}
+.at-wrap{position:relative}
+.at-wrap::before{content:"@";position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600}
+.at-wrap .input{padding-left:32px;width:100%}
+.plist{display:grid;gap:12px}
+.pitem{padding:16px 18px;display:grid;grid-template-columns:minmax(200px,1.3fr) 2fr auto;gap:18px;align-items:center}
+.pitem .mini{display:flex;gap:20px;flex-wrap:wrap}
+.pitem .mini div strong{display:block;font-family:var(--display);font-size:18px}
+.pitem .mini div span{font-size:12px;color:var(--muted);font-weight:600}
+.pitem .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.slot-badge{font-size:12px;font-weight:800;color:#fff;border-radius:6px;padding:1px 7px;margin-left:6px}
+@media (max-width:860px){.pitem{grid-template-columns:1fr}.pitem .acts{justify-content:flex-start}}
+
+/* ---------- Versus ---------- */
+.picker{padding:18px;display:grid;grid-template-columns:1fr auto 1fr auto;gap:12px;align-items:end;margin-bottom:26px}
+.picker .vs-dot{margin-bottom:0;align-self:center}
+@media (max-width:760px){.picker{grid-template-columns:1fr}.picker .vs-dot{justify-self:center}}
+.duel{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.side{padding:22px;position:relative;overflow:hidden}
+.side::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--c)}
+.side-h{display:flex;gap:14px;align-items:center}
+.side-h b{font-family:var(--display);font-size:22px;display:block;line-height:1.1}
+.er-big{margin-top:22px}
+.er-big .num{font-family:var(--display);font-weight:800;font-size:56px;letter-spacing:-.04em;line-height:1}
+.er-big .num small{font-size:24px}
+.er-big .cap{display:flex;align-items:center;gap:8px;margin-top:4px;font-weight:600;color:var(--muted);font-size:14px}
+.scale{margin-top:16px}
+.scale-track{position:relative;height:10px;border-radius:6px;display:grid;grid-template-columns:1fr 2fr 3fr 2fr;gap:3px}
+.scale-track i{border-radius:6px}
+.scale-track i:nth-child(1){background:color-mix(in srgb,var(--bad) 55%,transparent)}
+.scale-track i:nth-child(2){background:color-mix(in srgb,var(--warn) 55%,transparent)}
+.scale-track i:nth-child(3){background:color-mix(in srgb,var(--good) 55%,transparent)}
+.scale-track i:nth-child(4){background:color-mix(in srgb,var(--violet) 60%,transparent)}
+.scale-mark{position:absolute;top:-5px;width:4px;height:20px;border-radius:3px;background:var(--ink);transform:translateX(-50%);transition:left .5s cubic-bezier(.2,.8,.2,1)}
+.scale-legend{display:grid;grid-template-columns:1fr 2fr 3fr 2fr;font-size:11px;color:var(--muted);font-weight:600;margin-top:6px}
+.scale-legend span:not(:first-child){border-left:1px solid var(--line);padding-left:4px}
+.explain{margin-top:16px;padding:14px 16px;border-radius:14px;background:var(--surface-2);font-size:14px}
+.explain b{font-family:var(--display)}
+.vs-table{margin-top:16px;overflow-x:auto}
+.vs-table table{width:100%;border-collapse:collapse;min-width:520px}
+.vs-table th,.vs-table td{padding:13px 16px;text-align:center;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.vs-table th{font-size:13px;color:var(--muted);font-weight:700}
+.vs-table td:first-child,.vs-table th:first-child{text-align:left;color:var(--muted);font-weight:600}
+.vs-table tr:last-child td{border-bottom:0}
+.vs-table td.win{font-weight:800}
+.vs-table td.win.wa{color:var(--a)}
+.vs-table td.win.wb{color:var(--b)}
+.vs-table .crown{font-size:12px;margin-left:4px}
+.charts{display:grid;grid-template-columns:1fr 1.3fr;gap:16px;margin-top:16px}
+.chart{padding:20px}
+.chart h3{margin-bottom:4px}
+.chart svg{width:100%;height:auto;display:block;margin-top:12px}
+.legend{display:flex;gap:16px;font-size:13px;font-weight:600;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.diag{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.diag .panel{padding:20px}
+.diag ul{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.diag li{display:grid;grid-template-columns:20px 1fr;gap:8px;font-size:15px}
+.diag li .ic{font-weight:800}
+.diag li.plus .ic{color:var(--good)}
+.diag li.minus .ic{color:var(--bad)}
+.verdict{margin-top:16px;padding:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.verdict p{margin:0;flex:1;min-width:240px;font-size:17px}
+.fb{margin-top:16px;padding:18px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.fb p{margin:0;font-weight:600;flex:1;min-width:220px}
+@media (max-width:860px){.duel,.charts,.diag{grid-template-columns:1fr}}
+
+/* ---------- Login ---------- */
+.auth{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.auth-card{padding:26px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border-radius:12px;padding:4px;margin-bottom:20px}
+.tabs button{height:38px;border:0;border-radius:9px;background:transparent;font-weight:700;cursor:pointer;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.type-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.type-pick label{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;display:flex;flex-direction:column;gap:2px;font-weight:700}
+.type-pick label small{font-weight:500;color:var(--muted);font-size:13px}
+.type-pick input{position:absolute;opacity:0;pointer-events:none}
+.type-pick label:has(input:checked){border-color:var(--a);background:color-mix(in srgb,var(--a) 7%,var(--surface))}
+.type-pick label:has(input:focus-visible){outline:2px solid var(--a);outline-offset:2px}
+.form-stack{display:grid;gap:14px}
+.demo-acc{padding:26px}
+.demo-acc .acc{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;margin-top:10px}
+.demo-acc .acc div{flex:1;min-width:0}
+.demo-acc .acc b{display:block}
+.demo-acc .acc small{color:var(--muted)}
+@media (max-width:860px){.auth{grid-template-columns:1fr}}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:600;font-size:15px;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:calc(100% - 32px);animation:tin .25s ease}
+@keyframes tin{from{opacity:0;transform:translate(-50%,8px)}}
+.foot{max-width:1120px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:13px}
+.copy-box{width:100%;min-height:200px;margin-top:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);padding:12px;font:13px/1.5 ui-monospace,Menlo,monospace;color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+(function(){
+"use strict";
+const { useState, useEffect, useMemo, useCallback, useRef } = React;
+const html = htm.bind(React.createElement);
+
+/* =====================================================================
+   1. Utilidades
+   ===================================================================== */
+const nfCompact = new Intl.NumberFormat("es-PE",{notation:"compact",maximumFractionDigits:1});
+const nfInt = new Intl.NumberFormat("es-PE");
+const fmt = n => nfCompact.format(n);
+const fmtInt = n => nfInt.format(Math.round(n));
+const pct = (n,d=2) => n.toLocaleString("es-PE",{minimumFractionDigits:d,maximumFractionDigits:d}) + "%";
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+/* =====================================================================
+   2. Persistencia (localStorage con manejo de errores)
+   ===================================================================== */
+const KEYS={users:"sponcer.users",session:"sponcer.session",saved:"sponcer.saved",versus:"sponcer.versus",feedback:"sponcer.feedback",theme:"sponcer.theme"};
+const store={
+  get(k,fallback){try{const v=localStorage.getItem(k);return v==null?fallback:JSON.parse(v)}catch(e){return fallback}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}},
+  del(k){try{localStorage.removeItem(k)}catch(e){}}
+};
+function usePersisted(key,initial){
+  const [val,setVal]=useState(()=>store.get(key,initial));
+  useEffect(()=>{store.set(key,val)},[key,val]);
+  return [val,setVal];
+}
+
+async function hashPassword(pw){
+  try{
+    const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("sponcer:"+pw));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }catch(e){return "h"+hashStr("sponcer:"+pw).toString(16)}
+}
+
+/* =====================================================================
+   3. Capa de API de Instagram
+   En el MVP es un servicio simulado con la misma forma que tendría la
+   respuesta real (Instagram Graph API · Business Discovery). Para
+   conectarla, solo hay que reemplazar el cuerpo de getProfile().
+   ===================================================================== */
+const CATALOG=[
+  {handle:"albarios",name:"Alba Ríos",type:"influencer",category:"Lifestyle",followers:184000,following:812,posts:1240,avgLikes:9800,avgComments:420,postsPerWeek:5,growth:4.2},
+  {handle:"cafenorte",name:"Café Norte",type:"marca",category:"Gastronomía",followers:42300,following:390,posts:615,avgLikes:1350,avgComments:96,postsPerWeek:3,growth:2.1},
+  {handle:"mateoviaja",name:"Mateo Viaja",type:"influencer",category:"Viajes",followers:512000,following:640,posts:1980,avgLikes:14200,avgComments:310,postsPerWeek:4,growth:1.4},
+  {handle:"lucia.fit",name:"Lucía Fit",type:"influencer",category:"Fitness",followers:96500,following:530,posts:870,avgLikes:6900,avgComments:512,postsPerWeek:6,growth:6.8},
+  {handle:"barrancobikes",name:"Barranco Bikes",type:"marca",category:"Deporte",followers:18700,following:220,posts:340,avgLikes:610,avgComments:41,postsPerWeek:2,growth:3.3},
+  {handle:"sabores.delsur",name:"Sabores del Sur",type:"marca",category:"Gastronomía",followers:133000,following:180,posts:2210,avgLikes:3100,avgComments:140,postsPerWeek:7,growth:0.6},
+  {handle:"andreatech",name:"Andrea Tech",type:"influencer",category:"Tecnología",followers:77400,following:410,posts:690,avgLikes:3500,avgComments:380,postsPerWeek:4,growth:5.1},
+  {handle:"kusi.moda",name:"Kusi Moda",type:"marca",category:"Moda",followers:241000,following:95,posts:3120,avgLikes:4200,avgComments:95,postsPerWeek:6,growth:-0.8},
+  {handle:"diegocomedia",name:"Diego Comedia",type:"influencer",category:"Entretenimiento",followers:1240000,following:300,posts:1450,avgLikes:61000,avgComments:2300,postsPerWeek:5,growth:2.9},
+  {handle:"verde.lima",name:"Verde Lima",type:"marca",category:"Sostenibilidad",followers:28900,following:510,posts:420,avgLikes:1900,avgComments:160,postsPerWeek:3,growth:7.4}
+];
+const CATEGORIES=["Lifestyle","Gastronomía","Viajes","Fitness","Deporte","Tecnología","Moda","Entretenimiento","Sostenibilidad"];
+const HUES={Lifestyle:330,"Gastronomía":24,Viajes:200,Fitness:150,Deporte:100,"Tecnología":250,Moda:300,Entretenimiento:280,Sostenibilidad:130};
+
+function buildRecentPosts(p){
+  const r=rng(hashStr(p.handle+":posts"));
+  const kinds=["Reel","Foto","Carrusel"];
+  return Array.from({length:9},(_,i)=>{
+    const kind=kinds[Math.floor(r()*3)];
+    const boost=kind==="Reel"?1.25:kind==="Carrusel"?1.08:.82;
+    const v=.55+r()*.9;
+    const likes=Math.round(p.avgLikes*v*boost);
+    const comments=Math.round(p.avgComments*(.5+r()*1)*boost);
+    return {id:p.handle+"-"+i,kind,likes,comments,daysAgo:Math.round((i+1)*7/p.postsPerWeek)};
+  }).reverse();
+}
+function generateProfile(handle){
+  const r=rng(hashStr(handle));
+  const followers=Math.round(Math.exp(7.5+r()*6.2));
+  const erTarget=.004+r()*.07;
+  const avgComments=Math.round(followers*erTarget*(.03+r()*.07));
+  const avgLikes=Math.round(followers*erTarget)-avgComments;
+  const name=handle.replace(/[._]/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+  return {handle,name,type:r()>.5?"influencer":"marca",category:CATEGORIES[Math.floor(r()*CATEGORIES.length)],
+    followers,following:Math.round(150+r()*1400),posts:Math.round(60+r()*2500),avgLikes:Math.max(1,avgLikes),avgComments:Math.max(0,avgComments),
+    postsPerWeek:Math.max(1,Math.round(1+r()*6)),growth:Math.round((-1.5+r()*9)*10)/10};
+}
+const HANDLE_RE=/^[a-z0-9._]{2,30}$/;
+const InstagramAPI={
+  normalize(h){return String(h||"").trim().toLowerCase().replace(/^@/,"").replace(/^https?:\/\/(www\.)?instagram\.com\//,"").replace(/\/.*$/,"")},
+  async getProfile(raw){
+    const handle=this.normalize(raw);
+    await sleep(450+Math.random()*450);
+    if(!HANDLE_RE.test(handle)) throw new Error("Ese usuario no es válido. Usa letras, números, puntos o guiones bajos (ej. albarios).");
+    const base=CATALOG.find(p=>p.handle===handle)||generateProfile(handle);
+    const p={...base,source:CATALOG.some(c=>c.handle===handle)?"catalogo":"api",fetchedAt:Date.now()};
+    p.recentPosts=buildRecentPosts(p);
+    return p;
+  },
+  async searchProfiles(){
+    await sleep(600);
+    return CATALOG.map(p=>({...p,recentPosts:buildRecentPosts(p),fetchedAt:Date.now()}));
+  }
+};
+
+/* =====================================================================
+   4. Métricas y diagnóstico
+   ===================================================================== */
+const er = p => (p.avgLikes+p.avgComments)/p.followers*100;
+function level(v){
+  if(v<1) return {key:"bajo",label:"Bajo"};
+  if(v<3) return {key:"promedio",label:"Promedio"};
+  if(v<6) return {key:"bueno",label:"Bueno"};
+  return {key:"excelente",label:"Excelente"};
+}
+// posición del marcador en la escala 0–1 | 1–3 | 3–6 | 6–8+
+function scalePos(v){
+  const segs=[[0,1,1],[1,3,2],[3,6,3],[6,8,2]];const total=8;let acc=0;
+  for(const [a,b,w] of segs){ if(v<=b) return (acc+(clamp(v,a,b)-a)/(b-a)*w)/total*100; acc+=w; }
+  return 100;
+}
+const convo = p => p.avgComments/Math.max(1,p.avgLikes);
+function bestFormat(p){
+  const by={};p.recentPosts.forEach(x=>{(by[x.kind]=by[x.kind]||[]).push((x.likes+x.comments)/p.followers*100)});
+  return Object.entries(by).map(([k,a])=>[k,a.reduce((s,v)=>s+v,0)/a.length]).sort((a,b)=>b[1]-a[1])[0];
+}
+function diagnose(p){
+  const plus=[],minus=[];const e=er(p);
+  if(e>=3) plus.push("Su audiencia reacciona por encima del promedio del mercado.");
+  if(e<1) minus.push("Menos del 1% de seguidores interactúa: el contenido no está conectando.");
+  if(convo(p)>=.05) plus.push("Genera conversación: muchos comentarios por cada like.");
+  else if(convo(p)<.03) minus.push("Pocos comentarios frente a los likes. Prueba preguntas o llamados a la acción.");
+  if(p.growth>=4) plus.push("Crece rápido: +"+pct(p.growth,1)+" de seguidores en 30 días.");
+  else if(p.growth<1) minus.push("Crecimiento estancado ("+(p.growth>0?"+":"")+pct(p.growth,1)+" en 30 días).");
+  if(p.postsPerWeek>=4) plus.push("Publica con constancia ("+p.postsPerWeek+" posts por semana).");
+  else if(p.postsPerWeek<3) minus.push("Baja frecuencia: "+p.postsPerWeek+" posts por semana.");
+  const bf=bestFormat(p); if(bf) plus.push("Su formato más fuerte es "+bf[0].toLowerCase()+" ("+pct(bf[1])+" de engagement).");
+  return {plus,minus};
+}
+const METRICS=[
+  {key:"followers",label:"Seguidores",get:p=>p.followers,show:fmt},
+  {key:"er",label:"Engagement",get:er,show:v=>pct(v)},
+  {key:"likes",label:"Likes promedio",get:p=>p.avgLikes,show:fmt},
+  {key:"comments",label:"Comentarios promedio",get:p=>p.avgComments,show:fmt},
+  {key:"freq",label:"Posts por semana",get:p=>p.postsPerWeek,show:v=>String(v)},
+  {key:"growth",label:"Crecimiento 30 días",get:p=>p.growth,show:v=>(v>0?"+":"")+pct(v,1)}
+];
+
+/* =====================================================================
+   5. Router por hash
+   ===================================================================== */
+const ROUTES=["inicio","descubrir","perfiles","comparar","login"];
+function useRoute(){
+  const read=()=>{const h=(location.hash||"").replace("#","");return ROUTES.includes(h)?h:"inicio"};
+  const [route,setRoute]=useState(read);
+  useEffect(()=>{const on=()=>{setRoute(read());window.scrollTo(0,0)};window.addEventListener("hashchange",on);return()=>window.removeEventListener("hashchange",on)},[]);
+  return [route,r=>{location.hash=r}];
+}
+
+/* =====================================================================
+   6. Componentes compartidos
+   ===================================================================== */
+function Avatar({p,size=48}){
+  const h=HUES[p.category]??(hashStr(p.handle)%360);
+  const initials=p.name.split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+  return html`<div className="av" style=${{"--s":size+"px"}} aria-hidden="true"><span style=${{background:`linear-gradient(140deg,hsl(${h} 70% 55%),hsl(${(h+50)%360} 65% 42%))`}}>${initials}</span></div>`;
+}
+function ERPill({p}){const v=er(p);const l=level(v);return html`<span className=${"er-pill lvl-"+l.key} title=${"Engagement "+l.label.toLowerCase()}>${pct(v)}</span>`}
+function Empty({title,text,action}){return html`<div className="panel empty"><h3>${title}</h3><p>${text}</p>${action}</div>`}
+
+/* =====================================================================
+   7. Vistas
+   ===================================================================== */
+function Home({go}){
+  const A=CATALOG[0],B=CATALOG[2];
+  const rows=[
+    ["Engagement",er(A),er(B),v=>pct(v)],
+    ["Comentarios promedio",A.avgComments,B.avgComments,fmt],
+    ["Crecimiento 30 días",A.growth,B.growth,v=>"+"+pct(v,1)]
+  ];
+  return html`<section>
+    <div className="hero">
+      <div>
+        <h1>Mide tu Instagram <span className="grad-text">contra tu competencia</span> en segundos.</h1>
+        <p className="lead">Sponcer pone dos cuentas cara a cara y te dice quién conecta mejor con su audiencia, en qué gana cada una y qué cambiar en tu próximo post. Gratis, sin hojas de cálculo.</p>
+        <div className="row">
+          <a className="btn btn-grad" href="#comparar">Comparar dos perfiles</a>
+          <a className="btn" href="#descubrir">Explorar perfiles</a>
+        </div>
+      </div>
+      <div className="panel demo" aria-label="Ejemplo de comparación">
+        <div className="demo-vs">
+          <div className="who"><${Avatar} p=${A} size=${64}/><b>${A.name}</b><small className="muted">${fmt(A.followers)} seguidores</small></div>
+          <div className="vs-dot">VS</div>
+          <div className="who"><${Avatar} p=${B} size=${64}/><b>${B.name}</b><small className="muted">${fmt(B.followers)} seguidores</small></div>
+        </div>
+        <div className="demo-bars">
+          ${rows.map(([lab,a,b,f])=>{const m=Math.max(a,b);return html`<div key=${lab}>
+            <div className="dbar-label"><span style=${{color:"var(--a)"}}>${f(a)}</span><span className="muted">${lab}</span><span style=${{color:"var(--b)"}}>${f(b)}</span></div>
+            <div className="dbar"><i><b style=${{width:(a/m*100)+"%"}}></b></i><i><b style=${{width:(b/m*100)+"%"}}></b></i></div>
+          </div>`})}
+        </div>
+        <p className="muted" style=${{fontSize:"14px",margin:"18px 0 0"}}>Con casi 3 veces menos seguidores, Alba Ríos consigue más del doble de interacción por post.</p>
+      </div>
+    </div>
+    <div className="loop">
+      <div><div className="n">1</div><h3>Agrega las cuentas</h3><p>Escribe el @usuario de tu cuenta y de la que quieres vigilar. Se guardan en tu navegador.</p></div>
+      <div><div className="n">2</div><h3>Compáralas cara a cara</h3><p>Engagement, alcance, frecuencia y crecimiento, lado a lado y con gráficos.</p></div>
+      <div><div className="n">3</div><h3>Decide tu siguiente post</h3><p>Recibe fortalezas, debilidades y el formato que mejor le funciona a cada cuenta.</p></div>
+    </div>
+  </section>`;
+}
+
+function Discover({saved,onSave,onCompare}){
+  const [all,setAll]=useState(null);const [error,setError]=useState("");
+  const [q,setQ]=useState("");const [cat,setCat]=useState("Todas");const [type,setType]=useState("todos");
+  const [minF,setMinF]=useState(0);const [sort,setSort]=useState("er");
+  useEffect(()=>{let on=true;InstagramAPI.searchProfiles().then(r=>on&&setAll(r)).catch(()=>on&&setError("No se pudieron cargar los perfiles. Recarga la página para intentarlo de nuevo."));return()=>{on=false}},[]);
+  const list=useMemo(()=>{
+    if(!all) return [];
+    const t=q.trim().toLowerCase();
+    return all.filter(p=>(cat==="Todas"||p.category===cat)&&(type==="todos"||p.type===type)&&p.followers>=minF&&(!t||p.name.toLowerCase().includes(t)||p.handle.includes(t)))
+      .sort((a,b)=>sort==="er"?er(b)-er(a):sort==="followers"?b.followers-a.followers:b.growth-a.growth);
+  },[all,q,cat,type,minF,sort]);
+  const isSaved=h=>saved.some(s=>s.handle===h);
+  return html`<section>
+    <div className="page-head"><h2>Descubrir perfiles</h2><p className="lead">Explora creadores y marcas, filtra por nicho y tamaño, y llévalos al comparador.</p></div>
+    <div className="panel filters">
+      <label className="field f-search">Buscar<input className="input" type="search" placeholder="Nombre o @usuario" value=${q} onInput=${e=>setQ(e.target.value)}/></label>
+      <label className="field">Tipo de cuenta<select className="select" value=${type} onChange=${e=>setType(e.target.value)}><option value="todos">Todas</option><option value="influencer">Influencers</option><option value="marca">Marcas</option></select></label>
+      <label className="field">Seguidores mínimos<select className="select" value=${minF} onChange=${e=>setMinF(+e.target.value)}><option value="0">Cualquiera</option><option value="10000">10 mil</option><option value="50000">50 mil</option><option value="100000">100 mil</option><option value="500000">500 mil</option></select></label>
+      <label className="field">Ordenar por<select className="select" value=${sort} onChange=${e=>setSort(e.target.value)}><option value="er">Mayor engagement</option><option value="followers">Más seguidores</option><option value="growth">Mayor crecimiento</option></select></label>
+    </div>
+    <div className="chips" role="group" aria-label="Categoría">
+      ${["Todas",...CATEGORIES].map(c=>html`<button key=${c} className="chip" aria-pressed=${cat===c} onClick=${()=>setCat(c)}>${c}</button>`)}
+    </div>
+    ${error?html`<${Empty} title="Algo falló al cargar" text=${error}/>`
+    :!all?html`<div className="grid">${[1,2,3,4,5,6].map(i=>html`<div key=${i} className="skel"></div>`)}</div>`
+    :list.length===0?html`<${Empty} title="Ningún perfil coincide" text="Quita algún filtro o busca otro nombre." action=${html`<button className="btn" onClick=${()=>{setQ("");setCat("Todas");setType("todos");setMinF(0)}}>Quitar filtros</button>`}/>`
+    :html`<div className="grid">${list.map(p=>html`<article key=${p.handle} className="panel pcard">
+        <div className="pcard-h"><${Avatar} p=${p}/><div><b>${p.name}</b><small>@${p.handle}</small></div></div>
+        <div className="row"><span className="tag">${p.type==="marca"?"Marca":"Influencer"}</span><span className="tag">${p.category}</span></div>
+        <div className="stats3">
+          <div><strong>${fmt(p.followers)}</strong><span>seguidores</span></div>
+          <div><strong><${ERPill} p=${p}/></strong><span>engagement</span></div>
+          <div><strong>${(p.growth>0?"+":"")+pct(p.growth,1)}</strong><span>en 30 días</span></div>
+        </div>
+        <div className="row">
+          <button className="btn btn-sm" disabled=${isSaved(p.handle)} onClick=${()=>onSave(p)}>${isSaved(p.handle)?"Guardado":"Guardar"}</button>
+          <button className="btn btn-sm btn-grad" onClick=${()=>onCompare(p)}>Comparar</button>
+        </div>
+      </article>`)}</div>`}
+  </section>`;
+}
+
+function Profiles({saved,versus,onAdd,onRemove,onRefresh,onCompare,user,go}){
+  const [handle,setHandle]=useState("");const [busy,setBusy]=useState(false);const [error,setError]=useState("");const [refreshing,setRefreshing]=useState("");
+  async function submit(e){
+    e.preventDefault();setError("");
+    const h=InstagramAPI.normalize(handle);
+    if(!h){setError("Escribe un @usuario de Instagram.");return}
+    if(saved.some(s=>s.handle===h)){setError("@"+h+" ya está en tus perfiles.");return}
+    setBusy(true);
+    try{const p=await InstagramAPI.getProfile(h);onAdd(p);setHandle("")}catch(err){setError(err.message)}
+    setBusy(false);
+  }
+  async function refresh(h){setRefreshing(h);try{onRefresh(await InstagramAPI.getProfile(h))}catch(e){}setRefreshing("")}
+  const slotOf=h=>versus[0]===h?"A":versus[1]===h?"B":null;
+  return html`<section>
+    <div className="page-head"><h2>Mis perfiles</h2><p className="lead">${user?"Hola, "+user.name.split(" ")[0]+". ":""}Guarda tu cuenta y las de tu competencia para compararlas cuando quieras. Se guardan en este navegador.</p></div>
+    <form className="panel add-form" onSubmit=${submit}>
+      <label className="field">Usuario de Instagram<div className="at-wrap"><input className="input" placeholder="usuario o enlace al perfil" value=${handle} onInput=${e=>setHandle(e.target.value)} autoCapitalize="off" autoCorrect="off" spellCheck=${false}/></div></label>
+      <button className="btn btn-grad" disabled=${busy}>${busy?"Buscando…":"Agregar perfil"}</button>
+      ${error&&html`<p className="err" style=${{width:"100%"}} role="alert">${error}</p>`}
+    </form>
+    ${saved.length===0?html`<${Empty} title="Todavía no guardas perfiles" text="Agrega tu cuenta arriba o elige algunas desde Descubrir para empezar a comparar." action=${html`<a className="btn" href="#descubrir">Ir a Descubrir</a>`}/>`
+    :html`<${React.Fragment}><div className="plist">${saved.map(p=>{const s=slotOf(p.handle);const d=diagnose(p);return html`<article key=${p.handle} className="panel pitem">
+      <div className="pcard-h"><${Avatar} p=${p}/><div><b>${p.name}${s&&html`<span className="slot-badge" style=${{background:s==="A"?"var(--a)":"var(--b)"}}>${s}</span>`}</b><small>@${p.handle} · ${p.category}</small></div></div>
+      <div>
+        <div className="mini">
+          <div><strong>${fmt(p.followers)}</strong><span>seguidores</span></div>
+          <div><strong><${ERPill} p=${p}/></strong><span>engagement</span></div>
+          <div><strong>${p.postsPerWeek}</strong><span>posts/semana</span></div>
+          <div><strong>${(p.growth>0?"+":"")+pct(p.growth,1)}</strong><span>30 días</span></div>
+        </div>
+        <p className="muted" style=${{margin:"8px 0 0",fontSize:"14px"}}>${d.plus[0]||d.minus[0]||""}</p>
+      </div>
+      <div className="acts">
+        <button className="btn btn-sm" onClick=${()=>onCompare(p,"A")}>Lado A</button>
+        <button className="btn btn-sm" onClick=${()=>onCompare(p,"B")}>Lado B</button>
+        <button className="btn btn-sm btn-ghost" onClick=${()=>refresh(p.handle)} disabled=${refreshing===p.handle}>${refreshing===p.handle?"Actualizando…":"Actualizar"}</button>
+        <button className="btn btn-sm btn-ghost" onClick=${()=>onRemove(p.handle)} aria-label=${"Quitar @"+p.handle}>Quitar</button>
+      </div>
+    </article>`})}</div>
+    <div className="row" style=${{marginTop:"18px"}}><button className="btn btn-grad" disabled=${!(versus[0]&&versus[1])} onClick=${()=>go("comparar")}>Ver comparación</button><span className="muted" style=${{fontSize:"14px"}}>${versus[0]&&versus[1]?"@"+versus[0]+" contra @"+versus[1]:"Elige un perfil para el lado A y otro para el lado B."}</span></div><//>`}
+  </section>`;
+}
+
+/* ---------- Gráficos SVG ---------- */
+function Radar({A,B}){
+  const axes=[
+    ["Engagement",p=>clamp(er(p)/8,0,1)],
+    ["Alcance",p=>clamp((Math.log10(p.followers)-3)/3.5,0,1)],
+    ["Frecuencia",p=>clamp(p.postsPerWeek/7,0,1)],
+    ["Crecimiento",p=>clamp((p.growth+2)/10,0,1)],
+    ["Conversación",p=>clamp(convo(p)/.08,0,1)]
+  ];
+  const cx=160,cy=150,R=105,n=axes.length;
+  const pt=(i,v)=>{const a=-Math.PI/2+i*2*Math.PI/n;return [cx+Math.cos(a)*R*v,cy+Math.sin(a)*R*v]};
+  const poly=p=>axes.map(([,f],i)=>pt(i,Math.max(.04,f(p))).join(",")).join(" ");
+  return html`<svg viewBox="0 0 320 300" role="img" aria-label="Radar comparativo de cinco dimensiones">
+    ${[.25,.5,.75,1].map(r=>html`<polygon key=${r} points=${axes.map((_,i)=>pt(i,r).join(",")).join(" ")} fill="none" stroke="var(--line)"/>`)}
+    ${axes.map(([lab],i)=>{const [x,y]=pt(i,1);const [lx,ly]=pt(i,1.2);return html`<g key=${lab}><line x1=${cx} y1=${cy} x2=${x} y2=${y} stroke="var(--line)"/><text x=${lx} y=${ly+4} textAnchor="middle" fontSize="11.5" fontWeight="600" fill="var(--muted)">${lab}</text></g>`})}
+    <polygon points=${poly(A)} fill="var(--a)" fillOpacity=".18" stroke="var(--a)" strokeWidth="2"/>
+    <polygon points=${poly(B)} fill="var(--b)" fillOpacity=".18" stroke="var(--b)" strokeWidth="2"/>
+  </svg>`;
+}
+function PostBars({A,B}){
+  const W=520,H=230,pad={l:40,r:8,t:12,b:30};
+  const eA=A.recentPosts.map(x=>(x.likes+x.comments)/A.followers*100);
+  const eB=B.recentPosts.map(x=>(x.likes+x.comments)/B.followers*100);
+  const max=Math.max(...eA,...eB)*1.1;const n=9;const gw=(W-pad.l-pad.r)/n;const bw=gw*.34;
+  const y=v=>pad.t+(H-pad.t-pad.b)*(1-v/max);
+  const ticks=[0,max/2,max].map(v=>Math.round(v*10)/10);
+  return html`<svg viewBox=${`0 0 ${W} ${H}`} role="img" aria-label="Engagement de los últimos 9 posts de cada perfil">
+    ${ticks.map(t=>html`<g key=${t}><line x1=${pad.l} x2=${W-pad.r} y1=${y(t)} y2=${y(t)} stroke="var(--line)"/><text x=${pad.l-6} y=${y(t)+4} textAnchor="end" fontSize="11" fill="var(--muted)">${t}%</text></g>`)}
+    ${eA.map((v,i)=>{const x=pad.l+i*gw+gw/2;return html`<g key=${i}>
+      <rect x=${x-bw-1} y=${y(v)} width=${bw} height=${H-pad.b-y(v)} rx="4" fill="var(--a)"><title>${A.name+": "+pct(v)+" · "+A.recentPosts[i].kind}</title></rect>
+      <rect x=${x+1} y=${y(eB[i])} width=${bw} height=${H-pad.b-y(eB[i])} rx="4" fill="var(--b)"><title>${B.name+": "+pct(eB[i])+" · "+B.recentPosts[i].kind}</title></rect>
+      <text x=${x} y=${H-10} textAnchor="middle" fontSize="11" fill="var(--muted)">${i+1}</text></g>`})}
+  </svg>`;
+}
+
+function ERBlock({p,color,side}){
+  const v=er(p),l=level(v);
+  return html`<div className="panel side" style=${{"--c":color}}>
+    <div className="side-h"><${Avatar} p=${p} size=${60}/><div><small className="muted" style=${{fontWeight:700}}>Lado ${side}</small><b>${p.name}</b><small className="muted">@${p.handle} · ${fmt(p.followers)} seguidores</small></div></div>
+    <div className="er-big">
+      <div className="num" style=${{color}}>${v.toLocaleString("es-PE",{maximumFractionDigits:2})}<small>%</small></div>
+      <div className="cap">Tasa de engagement <span className=${"er-pill lvl-"+l.key}>${l.label}</span></div>
+    </div>
+    <div className="scale" aria-hidden="true">
+      <div className="scale-track"><i></i><i></i><i></i><i></i><span className="scale-mark" style=${{left:scalePos(v)+"%"}}></span></div>
+      <div className="scale-legend"><span>Bajo</span><span>Promedio 1–3%</span><span>Bueno 3–6%</span><span>Excelente</span></div>
+    </div>
+    <p className="muted" style=${{margin:"14px 0 0",fontSize:"14px"}}>De cada 100 seguidores, unos <b style=${{color:"var(--ink)"}}>${v.toLocaleString("es-PE",{maximumFractionDigits:1})}</b> dan like o comentan cada post.</p>
+  </div>`;
+}
+
+function Versus({saved,versus,setVersus,toast,feedback,setFeedback}){
+  const [inA,setInA]=useState(versus[0]||"");const [inB,setInB]=useState(versus[1]||"");
+  const [data,setData]=useState(null);const [busy,setBusy]=useState(false);const [error,setError]=useState("");const [copyText,setCopyText]=useState("");
+  useEffect(()=>{setInA(versus[0]||"");setInB(versus[1]||"")},[versus[0],versus[1]]);
+  const options=useMemo(()=>{const s=new Set([...saved.map(p=>p.handle),...CATALOG.map(p=>p.handle)]);return [...s]},[saved]);
+  const run=useCallback(async(a,b)=>{
+    setError("");const ha=InstagramAPI.normalize(a),hb=InstagramAPI.normalize(b);
+    if(!ha||!hb){setError("Escribe un usuario en cada lado.");return}
+    if(ha===hb){setError("Elige dos cuentas distintas para comparar.");return}
+    setBusy(true);
+    try{
+      const fromSaved=h=>saved.find(p=>p.handle===h);
+      const [A,B]=await Promise.all([fromSaved(ha)||InstagramAPI.getProfile(ha),fromSaved(hb)||InstagramAPI.getProfile(hb)]);
+      setData({A,B});setVersus([ha,hb]);
+    }catch(e){setError(e.message)}
+    setBusy(false);
+  },[saved,setVersus]);
+  useEffect(()=>{if(versus[0]&&versus[1]&&!data) run(versus[0],versus[1])},[]);
+
+  function buildReport(A,B){
+    const lines=["REPORTE SPONCER — "+new Date().toLocaleDateString("es-PE"),"","@"+A.handle+" vs @"+B.handle,""];
+    METRICS.forEach(m=>lines.push(m.label+": "+m.show(m.get(A))+" | "+m.show(m.get(B))));
+    [[A,diagnose(A)],[B,diagnose(B)]].forEach(([p,d])=>{lines.push("","@"+p.handle);d.plus.forEach(x=>lines.push("  + "+x));d.minus.forEach(x=>lines.push("  − "+x))});
+    return lines.join("\n");
+  }
+  async function copyReport(){
+    const t=buildReport(data.A,data.B);
+    try{await navigator.clipboard.writeText(t);toast("Reporte copiado al portapapeles")}catch(e){setCopyText(t)}
+  }
+  function vote(v){setFeedback(f=>({...f,[v]:(f[v]||0)+1,last:v}));toast("Gracias, tu respuesta quedó registrada")}
+
+  let body=null;
+  if(busy) body=html`<div className="duel"><div className="skel" style=${{height:"320px"}}></div><div className="skel" style=${{height:"320px"}}></div></div>`;
+  else if(data){
+    const {A,B}=data;const eA=er(A),eB=er(B);
+    const wins={a:0,b:0};
+    const rows=METRICS.map(m=>{const va=m.get(A),vb=m.get(B);const w=va===vb?null:va>vb?"a":"b";if(w)wins[w]++;return {m,va,vb,w}});
+    const leader=eA>=eB?A:B,other=leader===A?B:A;const ratio=Math.max(eA,eB)/Math.max(.01,Math.min(eA,eB));
+    const dA=diagnose(A),dB=diagnose(B);
+    body=html`<div>
+      <div className="duel">
+        <${ERBlock} p=${A} color="var(--a)" side="A"/>
+        <${ERBlock} p=${B} color="var(--b)" side="B"/>
+      </div>
+      <div className="explain"><b>¿Qué es la tasa de engagement?</b> Es el porcentaje de seguidores que interactúa con cada publicación: (likes promedio + comentarios promedio) ÷ seguidores × 100. Sirve para comparar cuentas de distinto tamaño, porque mide qué tan activa es la audiencia, no cuántos son.</div>
+      <div className="panel verdict">
+        <${Avatar} p=${leader} size=${52}/>
+        <p><b>${leader.name}</b> conecta mejor con su audiencia: su engagement es ${ratio>=1.95?ratio.toLocaleString("es-PE",{maximumFractionDigits:1})+" veces el":"un "+Math.round((ratio-1)*100)+"% mayor que el"} de ${other.name}. En total gana ${leader===A?wins.a:wins.b} de ${METRICS.length} métricas.</p>
+        <button className="btn" onClick=${copyReport}>Copiar reporte</button>
+      </div>
+      <div className="panel vs-table"><table>
+        <thead><tr><th>Métrica</th><th style=${{color:"var(--a)"}}>@${A.handle}</th><th style=${{color:"var(--b)"}}>@${B.handle}</th></tr></thead>
+        <tbody>${rows.map(({m,va,vb,w})=>html`<tr key=${m.key}><td>${m.label}</td>
+          <td className=${w==="a"?"win wa":""}>${m.show(va)}${w==="a"&&html`<span className="crown" aria-label="gana">▲</span>`}</td>
+          <td className=${w==="b"?"win wb":""}>${m.show(vb)}${w==="b"&&html`<span className="crown" aria-label="gana">▲</span>`}</td></tr>`)}</tbody>
+      </table></div>
+      <div className="charts">
+        <div className="panel chart"><h3>Perfil de rendimiento</h3><p className="muted" style=${{margin:0,fontSize:"14px"}}>Cada eje va de 0 al nivel de una cuenta top.</p>
+          <${Radar} A=${A} B=${B}/>
+          <div className="legend"><span><i style=${{background:"var(--a)"}}></i>@${A.handle}</span><span><i style=${{background:"var(--b)"}}></i>@${B.handle}</span></div></div>
+        <div className="panel chart"><h3>Engagement de los últimos 9 posts</h3><p className="muted" style=${{margin:0,fontSize:"14px"}}>Del más antiguo (1) al más reciente (9). Pasa el cursor para ver el formato.</p>
+          <${PostBars} A=${A} B=${B}/>
+          <div className="legend"><span><i style=${{background:"var(--a)"}}></i>@${A.handle}</span><span><i style=${{background:"var(--b)"}}></i>@${B.handle}</span></div></div>
+      </div>
+      <div className="diag">
+        ${[[A,dA,"var(--a)"],[B,dB,"var(--b)"]].map(([p,d,c])=>html`<div key=${p.handle} className="panel" style=${{borderTop:"4px solid "+c}}>
+          <h3>Diagnóstico de @${p.handle}</h3>
+          <ul>${d.plus.map(x=>html`<li key=${x} className="plus"><span className="ic">+</span><span>${x}</span></li>`)}
+              ${d.minus.map(x=>html`<li key=${x} className="minus"><span className="ic">−</span><span>${x}</span></li>`)}</ul>
+        </div>`)}
+      </div>
+      <div className="panel fb">
+        <p>¿Te quedó claro qué cuenta tiene mejor engagement y por qué?</p>
+        <div className="row">
+          <button className="btn btn-sm" onClick=${()=>vote("si")}>Sí, clarísimo</button>
+          <button className="btn btn-sm" onClick=${()=>vote("masomenos")}>Más o menos</button>
+          <button className="btn btn-sm" onClick=${()=>vote("no")}>No lo entendí</button>
+        </div>
+        ${(feedback.si||feedback.masomenos||feedback.no)&&html`<small className="muted" style=${{width:"100%"}}>Respuestas en este navegador: ${feedback.si||0} sí · ${feedback.masomenos||0} más o menos · ${feedback.no||0} no</small>`}
+      </div>
+      ${copyText&&html`<div className="panel" style=${{padding:"18px",marginTop:"16px"}}><h3>Copia el reporte</h3><p className="muted" style=${{margin:"4px 0 0",fontSize:"14px"}}>Tu navegador no permitió copiar automáticamente. Selecciona el texto y cópialo.</p><textarea className="copy-box" readOnly value=${copyText} onFocus=${e=>e.target.select()}></textarea><button className="btn btn-sm" style=${{marginTop:"8px"}} onClick=${()=>setCopyText("")}>Cerrar</button></div>`}
+    </div>`;
+  } else body=html`<${Empty} title="Elige dos cuentas para empezar" text="Escribe tu @usuario en el lado A y el de tu competencia en el lado B. También puedes elegir entre tus perfiles guardados." action=${html`<button className="btn" onClick=${()=>{setInA("albarios");setInB("cafenorte");run("albarios","cafenorte")}}>Probar con Alba Ríos y Café Norte</button>`}/>`;
+
+  return html`<section>
+    <div className="page-head"><h2>Comparar cara a cara</h2><p className="lead">Dos cuentas, las mismas métricas, un veredicto claro.</p></div>
+    <form className="panel picker" onSubmit=${e=>{e.preventDefault();run(inA,inB)}}>
+      <label className="field"><span style=${{color:"var(--a)"}}>Lado A</span><div className="at-wrap"><input className="input" list="handles" value=${inA} onInput=${e=>setInA(e.target.value)} placeholder="tu cuenta" autoCapitalize="off" spellCheck=${false}/></div></label>
+      <div className="vs-dot" aria-hidden="true">VS</div>
+      <label className="field"><span style=${{color:"var(--b)"}}>Lado B</span><div className="at-wrap"><input className="input" list="handles" value=${inB} onInput=${e=>setInB(e.target.value)} placeholder="tu competencia" autoCapitalize="off" spellCheck=${false}/></div></label>
+      <button className="btn btn-grad" disabled=${busy}>${busy?"Comparando…":"Comparar"}</button>
+      <datalist id="handles">${options.map(h=>html`<option key=${h} value=${h}/>`)}</datalist>
+      ${error&&html`<p className="err" style=${{gridColumn:"1/-1"}} role="alert">${error}</p>`}
+    </form>
+    ${body}
+  </section>`;
+}
+
+function Login({users,setUsers,session,setSession,onAdd,go,toast}){
+  const [tab,setTab]=useState("registro");
+  const [form,setForm]=useState({type:"influencer",name:"",handle:"",email:"",password:""});
+  const [error,setError]=useState("");const [busy,setBusy]=useState(false);
+  const set=k=>e=>setForm(f=>({...f,[k]:e.target.value}));
+  const current=users.find(u=>u.email===session);
+
+  async function register(e){
+    e.preventDefault();setError("");
+    const handle=InstagramAPI.normalize(form.handle);const email=form.email.trim().toLowerCase();
+    if(form.name.trim().length<2) return setError("Escribe tu nombre o el de tu marca.");
+    if(!HANDLE_RE.test(handle)) return setError("El @usuario de Instagram no es válido.");
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setError("El correo no tiene un formato válido.");
+    if(form.password.length<6) return setError("La contraseña necesita al menos 6 caracteres.");
+    if(users.some(u=>u.email===email)) return setError("Ya existe una cuenta con ese correo. Ingresa desde la pestaña Ingresar.");
+    setBusy(true);
+    try{
+      const p=await InstagramAPI.getProfile(handle);
+      const u={name:form.name.trim(),type:form.type,handle,email,pw:await hashPassword(form.password),createdAt:Date.now()};
+      setUsers(list=>[...list,u]);setSession(email);onAdd(p,true);
+      toast("Cuenta creada. Agregamos @"+handle+" a tus perfiles.");go("perfiles");
+    }catch(err){setError(err.message)}
+    setBusy(false);
+  }
+  async function login(e){
+    e.preventDefault();setError("");
+    const email=form.email.trim().toLowerCase();const u=users.find(x=>x.email===email);
+    if(!u||u.pw!==await hashPassword(form.password)) return setError("Correo o contraseña incorrectos.");
+    setSession(email);toast("Hola de nuevo, "+u.name.split(" ")[0]);go("perfiles");
+  }
+  async function demo(email){
+    const u=users.find(x=>x.email===email);if(!u) return;
+    setSession(email);const p=await InstagramAPI.getProfile(u.handle);onAdd(p,true);toast("Ingresaste como "+u.name);go("perfiles");
+  }
+
+  if(current) return html`<section><div className="panel auth-card" style=${{maxWidth:"520px"}}>
+    <div className="pcard-h"><${Avatar} p=${{name:current.name,handle:current.handle,category:current.type==="marca"?"Gastronomía":"Lifestyle"}} size=${56}/><div><b>${current.name}</b><small>@${current.handle} · ${current.type==="marca"?"Marca":"Influencer"} · ${current.email}</small></div></div>
+    <div className="row" style=${{marginTop:"20px"}}><a className="btn btn-grad" href="#perfiles">Ir a mis perfiles</a><button className="btn" onClick=${()=>{setSession(null);toast("Cerraste sesión")}}>Cerrar sesión</button></div>
+  </div></section>`;
+
+  return html`<section>
+    <div className="page-head"><h2>${tab==="registro"?"Crea tu cuenta":"Ingresa a Sponcer"}</h2><p className="lead">Para influencers que quieren medirse contra su nicho y para marcas que buscan con quién trabajar.</p></div>
+    <div className="auth">
+      <div className="panel auth-card">
+        <div className="tabs" role="tablist">
+          <button role="tab" aria-selected=${tab==="registro"} onClick=${()=>{setTab("registro");setError("")}}>Crear cuenta</button>
+          <button role="tab" aria-selected=${tab==="ingresar"} onClick=${()=>{setTab("ingresar");setError("")}}>Ingresar</button>
+        </div>
+        ${tab==="registro"?html`<form className="form-stack" onSubmit=${register} noValidate>
+          <div className="type-pick" role="radiogroup" aria-label="Tipo de cuenta">
+            <label><input type="radio" name="t" value="influencer" checked=${form.type==="influencer"} onChange=${set("type")}/>Soy influencer<small>Compárate con tu nicho</small></label>
+            <label><input type="radio" name="t" value="marca" checked=${form.type==="marca"} onChange=${set("type")}/>Soy marca<small>Evalúa creadores y rivales</small></label>
+          </div>
+          <label className="field">${form.type==="marca"?"Nombre de la marca":"Tu nombre"}<input className="input" value=${form.name} onInput=${set("name")} placeholder=${form.type==="marca"?"Café Norte":"Alba Ríos"} autoComplete="name"/></label>
+          <label className="field">Usuario de Instagram<div className="at-wrap"><input className="input" value=${form.handle} onInput=${set("handle")} placeholder=${form.type==="marca"?"cafenorte":"albarios"} autoCapitalize="off" spellCheck=${false}/></div></label>
+          <label className="field">Correo<input className="input" type="email" value=${form.email} onInput=${set("email")} autoComplete="email"/></label>
+          <label className="field">Contraseña<input className="input" type="password" value=${form.password} onInput=${set("password")} autoComplete="new-password" placeholder="Mínimo 6 caracteres"/></label>
+          ${error&&html`<p className="err" role="alert">${error}</p>`}
+          <button className="btn btn-grad" disabled=${busy}>${busy?"Creando cuenta…":"Crear cuenta"}</button>
+        </form>`
+        :html`<form className="form-stack" onSubmit=${login} noValidate>
+          <label className="field">Correo<input className="input" type="email" value=${form.email} onInput=${set("email")} autoComplete="email"/></label>
+          <label className="field">Contraseña<input className="input" type="password" value=${form.password} onInput=${set("password")} autoComplete="current-password"/></label>
+          ${error&&html`<p className="err" role="alert">${error}</p>`}
+          <button className="btn btn-grad">Ingresar</button>
+        </form>`}
+      </div>
+      <div className="panel demo-acc">
+        <h3>Cuentas de prueba</h3>
+        <p className="muted" style=${{margin:"4px 0 0",fontSize:"15px"}}>Entra con un clic para ver el flujo completo. Contraseña de ambas: demo123</p>
+        ${users.filter(u=>u.demo).map(u=>{const p=CATALOG.find(c=>c.handle===u.handle);return html`<div key=${u.email} className="acc">
+          <${Avatar} p=${p} size=${44}/><div><b>${u.name}</b><small>${u.type==="marca"?"Marca":"Influencer"} · ${u.email}</small></div>
+          <button className="btn btn-sm" onClick=${()=>demo(u.email)}>Entrar</button></div>`})}
+      </div>
+    </div>
+  </section>`;
+}
+
+/* =====================================================================
+   8. App
+   ===================================================================== */
+function App(){
+  const [route,go]=useRoute();
+  const [users,setUsers]=usePersisted(KEYS.users,[]);
+  const [session,setSession]=usePersisted(KEYS.session,null);
+  const [saved,setSaved]=usePersisted(KEYS.saved,[]);
+  const [versus,setVersus]=usePersisted(KEYS.versus,[null,null]);
+  const [feedback,setFeedback]=usePersisted(KEYS.feedback,{});
+  const [theme,setTheme]=usePersisted(KEYS.theme,null);
+  const [msg,setMsg]=useState("");const tRef=useRef();
+  const toast=useCallback(m=>{setMsg(m);clearTimeout(tRef.current);tRef.current=setTimeout(()=>setMsg(""),2600)},[]);
+
+  // Cuentas demo del primer flujo funcional
+  useEffect(()=>{(async()=>{
+    const pw=await hashPassword("demo123");
+    setUsers(list=>{
+      const need=[{name:"Alba Ríos",type:"influencer",handle:"albarios",email:"alba@sponcer.pe"},{name:"Café Norte",type:"marca",handle:"cafenorte",email:"hola@cafenorte.pe"}].filter(d=>!list.some(u=>u.email===d.email));
+      return need.length?[...list,...need.map(d=>({...d,pw,demo:true,createdAt:Date.now()}))]:list;
+    });
+  })()},[]);
+
+  useEffect(()=>{if(theme) document.documentElement.setAttribute("data-theme",theme);else document.documentElement.removeAttribute("data-theme")},[theme]);
+  const isDark=theme?theme==="dark":(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);
+
+  const user=users.find(u=>u.email===session)||null;
+  const addProfile=(p,quiet)=>{setSaved(list=>list.some(s=>s.handle===p.handle)?list:[p,...list]);if(!quiet)toast("@"+p.handle+" guardado en tus perfiles")};
+  const removeProfile=h=>{setSaved(l=>l.filter(p=>p.handle!==h));setVersus(v=>v.map(x=>x===h?null:x));toast("Perfil quitado")};
+  const refreshProfile=p=>{setSaved(l=>l.map(x=>x.handle===p.handle?p:x));toast("@"+p.handle+" actualizado")};
+  const compareFrom=(p,slot)=>{
+    setVersus(v=>{
+      if(slot==="A") return [p.handle,v[1]===p.handle?null:v[1]];
+      if(slot==="B") return [v[0]===p.handle?null:v[0],p.handle];
+      if(!v[0]||v[0]===p.handle) return [p.handle,v[1]===p.handle?null:v[1]];
+      return [v[0],p.handle];
+    });
+    if(!slot){toast("@"+p.handle+" listo para comparar");go("comparar")}
+    else toast("@"+p.handle+" en el lado "+slot);
+  };
+
+  const links=[["inicio","Inicio"],["descubrir","Descubrir"],["perfiles","Perfiles"],["comparar","Comparar"]];
+  let view;
+  if(route==="descubrir") view=html`<${Discover} saved=${saved} onSave=${p=>addProfile(p)} onCompare=${p=>compareFrom(p)}/>`;
+  else if(route==="perfiles") view=html`<${Profiles} saved=${saved} versus=${versus} user=${user} onAdd=${p=>addProfile(p)} onRemove=${removeProfile} onRefresh=${refreshProfile} onCompare=${compareFrom} go=${go}/>`;
+  else if(route==="comparar") view=html`<${Versus} key=${versus.join("|")} saved=${saved} versus=${versus} setVersus=${setVersus} toast=${toast} feedback=${feedback} setFeedback=${setFeedback}/>`;
+  else if(route==="login") view=html`<${Login} users=${users} setUsers=${setUsers} session=${session} setSession=${setSession} onAdd=${addProfile} go=${go} toast=${toast}/>`;
+  else view=html`<${Home} go=${go}/>`;
+
+  return html`<${React.Fragment}>
+    <header className="top"><div className="top-in">
+      <a className="brand" href="#inicio"><span className="brand-mark"><span></span></span>Sponcer</a>
+      <nav className="nav" aria-label="Principal">${links.map(([r,l])=>html`<a key=${r} href=${"#"+r} aria-current=${route===r?"page":undefined}>${l}</a>`)}</nav>
+      <div className="top-right">
+        <button className="icon-btn" onClick=${()=>setTheme(isDark?"light":"dark")} aria-label=${isDark?"Usar tema claro":"Usar tema oscuro"} title=${isDark?"Tema claro":"Tema oscuro"}>${isDark?"☀":"☾"}</button>
+        ${user?html`<a className="user-chip" href="#login" style=${{textDecoration:"none",color:"var(--ink)"}}><${Avatar} p=${{name:user.name,handle:user.handle,category:user.type==="marca"?"Gastronomía":"Lifestyle"}} size=${28}/><span className="uname">${user.name.split(" ")[0]}</span></a>`
+        :html`<a className="btn btn-sm btn-grad" href="#login">Ingresar</a>`}
+      </div>
+    </div></header>
+    <main>${view}</main>
+    <footer className="foot">MVP de Sponcer. Los datos de Instagram provienen de una API simulada con la misma estructura que la real; tus perfiles y cuentas se guardan solo en este navegador.</footer>
+    ${msg&&html`<div className="toast" role="status">${msg}</div>`}
+  <//>`;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(html`<${App}/>`);
+})();
+</script>
+</body>
+</html>
